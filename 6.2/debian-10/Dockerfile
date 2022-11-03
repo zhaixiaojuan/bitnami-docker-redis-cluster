@@ -1,17 +1,19 @@
-FROM docker.io/bitnami/minideb:buster
-LABEL maintainer "Bitnami <containers@bitnami.com>"
+FROM cr.loongnix.cn/bitnami/minideb:buster-loong64
 
 ENV HOME="/" \
-    OS_ARCH="amd64" \
+    OS_ARCH="loong64" \
     OS_FLAVOUR="debian-10" \
     OS_NAME="linux"
 
 COPY prebuildfs /
+COPY tar-gz/redis-6.2.1-0-linux-loong64-debian-10.tar.gz /tmp/bitnami/pkg/cache/
+COPY tar-gz/gosu-1.12.0-2-linux-loong64-debian-10.tar.gz /tmp/bitnami/pkg/cache/
 # Install required system packages and dependencies
 RUN install_packages acl ca-certificates curl gzip libc6 libssl1.1 procps tar
-RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "redis" "6.2.1-0" --checksum c104089841a906f944e285828a580968608017340b67befaa1771646cbfdf6b3
-RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "gosu" "1.12.0-2" --checksum 4d858ac600c38af8de454c27b7f65c0074ec3069880cb16d259a6e40a46bbc50
+RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "redis" "6.2.1-0" --checksum 74275011b1e2b40606d104304fc103e85f00c4cf1120e89a2517654aa7e81413
+RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "gosu" "1.12.0-2" --checksum 0c746b8bbdeedee266b02119a6cc55f2dc5be93d6468bf68cb89bea8d934f953
 RUN chmod g+rwX /opt/bitnami
+
 
 COPY rootfs /
 RUN /opt/bitnami/scripts/redis-cluster/postunpack.sh
